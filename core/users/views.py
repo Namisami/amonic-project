@@ -1,7 +1,12 @@
 from rest_framework import viewsets
 
-from .serializers import UserSerializer
-from .models import User
+from .serializers import UserSerializer, RoleSerializer
+from .models import User, Role
+
+
+class RoleViewSet(viewsets.ModelViewSet):
+    queryset = Role.objects.all()
+    serializer_class = RoleSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
