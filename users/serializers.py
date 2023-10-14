@@ -1,11 +1,11 @@
 from rest_framework import serializers
 
-from .models import User
+from .models import User, Role
 
 
 class RoleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = User
+        model = Role
         fields = ['url', 'id', 'title']
 
 
