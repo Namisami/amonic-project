@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.signals import user_logged_in, user_logged_out
+from django.dispatch import receiver
+from datetime import datetime
 
 from .managers import CustomUserManager
 
@@ -23,11 +26,12 @@ class Role(models.Model):
 class User(AbstractUser):
     username = None
     # office_id
-    role_id = models.ForeignKey(to=Role, on_delete=models.PROTECT, default=Role.get_default_pk)
+    role_id = models.ForeignKey(verbose_name='Роль', to=Role, on_delete=models.PROTECT, default=Role.get_default_pk)
     email = models.EmailField(verbose_name='Email', unique=True)
     first_name = models.CharField(verbose_name='Имя', blank=True, max_length=255)
     last_name = models.CharField(verbose_name='Фамилия', blank=True, max_length=255)
     date_of_birth = models.DateField(verbose_name='Дата рождения', null=True)
+    last_logout = models.DateTimeField(verbose_name='Время выхода')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -41,3 +45,8 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
 
+@receiver(user_logged_out)
+def sig_user_logged_out(sender, user, request, **kwargs):
+    print(user)
+    user.last_logout = datetime.now()
+    user.save()
