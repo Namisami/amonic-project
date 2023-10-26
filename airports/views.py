@@ -32,3 +32,18 @@ class RouteViewSet(viewsets.ModelViewSet):
 class ScheduleViewSet(viewsets.ModelViewSet):
     queryset = Schedule.objects.all()
     serializer_class = ScheduleSerializer
+    ordering_fields = ['date', 'time', 'economy_price', 'confirmed']
+
+    def get_queryset(self):
+        departure = self.request.query_params.get('departure')
+        if departure is not None:
+            queryset = queryset.filter(departure_airport=departure)
+        arrival = self.request.query_params.get('arrival')
+        if arrival is not None:
+            queryset = queryset.filter(arrival_airport=arrival)
+        date = self.request.query_params.get('date')
+        if date is not None:
+            queryset = queryset.filter(date=date)
+        flight_number = self.request.query_params.get('flight_number')
+        if flight_number is not None:
+            queryset = queryset.filter(flight_number=flight_number)
