@@ -10,6 +10,7 @@ class RoleSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
+    online_time = serializers.ReadOnlyField()
     class Meta:
         model = User
-        fields = ['url', 'id', 'role_id', 'email', 'password', 'first_name', 'last_name', 'date_of_birth', 'is_active', 'last_login']
+        fields = ['url', 'id', 'role_id', 'email', 'password', 'first_name', 'last_name', 'date_of_birth', 'is_active', 'online_time', 'last_logout']

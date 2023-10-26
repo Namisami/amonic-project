@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
-from datetime import datetime
+from django.utils import timezone
 
 from .managers import CustomUserManager
 
@@ -37,6 +37,13 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
+
+    @property
+    def online_time(self):
+        if self.last_login < self.last_logout:
+            return 0
+        else:
+            return timezone.now() - self.last_login
     
     class Meta:
         verbose_name = 'Пользователь'
@@ -47,6 +54,5 @@ class User(AbstractUser):
 
 @receiver(user_logged_out)
 def sig_user_logged_out(sender, user, request, **kwargs):
-    print(user)
-    user.last_logout = datetime.now()
+    user.last_logout = timezone.now()
     user.save()
