@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 
-from .serializers import CountrySerializer, OfficeSerializer, AircraftSerializer, AirportSerializer, RouteSerializer, ScheduleSerializer, CabinTypeSerializer, TicketSerializer
-from .models import Country, Office, Aircraft, Airport, Route, Schedule, CabinType, Ticket
+from .serializers import CountrySerializer, OfficeSerializer, AircraftSerializer, AirportSerializer, RouteSerializer, ScheduleSerializer, CabinTypeSerializer, TicketSerializer, SurveySerializer
+from .models import Country, Office, Aircraft, Airport, Route, Schedule, CabinType, Ticket, Survey
 
 
 class CountryViewSet(viewsets.ModelViewSet):
@@ -77,3 +77,8 @@ class TicketViewSet(viewsets.ModelViewSet):
             self.queryset = [query for query in self.queryset if str(query.return_date) == return_date]
         return self.queryset
         
+
+class SurveyViewSet(viewsets.ModelViewSet):
+    queryset = Survey.objects.all()
+    serializer_class = SurveySerializer
+                
