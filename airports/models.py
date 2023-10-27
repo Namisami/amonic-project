@@ -142,11 +142,9 @@ class Ticket(models.Model):
         user_tickets = Ticket.objects.filter(user=self.user)
         route_id = Route.objects.get(arrival_airport=Airport.objects.get(iata_code=self.departure_airport)).id
         schedule = Schedule.objects.get(id=self.schedule.id)
-        return_tickets = user_tickets.filter(schedule=Schedule.objects.get(route=route_id, date__gte=schedule.date, time__gt=schedule.time))
-        return_schedule = Schedule.objects.get(id=return_tickets[0].schedule.id)
-        return return_schedule.date
-        # return_ticket = user_tickets.filter(arrival_airport=self.departure_airport)
-        # date = Schedule.objects.get(id=return_ticket.schedule.id).date
-        # if date is None:
-        #     return None
-        # return date
+        return_schedules = Schedule.objects.filter(route=route_id, date__gte=schedule.date, time__gt=schedule.time)
+        if return_schedules.count() > 0:
+            return_tickets = user_tickets.filter(schedule=return_schedules[0])
+            return_schedule = Schedule.objects.get(id=return_tickets[0].schedule.id)
+            return return_schedule.date
+        return None

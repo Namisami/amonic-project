@@ -69,11 +69,11 @@ class TicketViewSet(viewsets.ModelViewSet):
         departure_airport = self.request.query_params.get('departure_airport')
         if departure_airport is not None:
             self.queryset = [query for query in self.queryset if query.departure_airport == departure_airport]
-        # outbound = self.request.query_params.get('outbound')
-        # if outbound is not None:
-        #     self.queryset = self.queryset.filter(departure_airport=cabin_type)
-        # departure_airport = self.request.query_params.get('departure_airport')
-        # if departure_airport is not None:
-        #     self.queryset = self.queryset.filter(departure_airport=cabin_type)
+        outbound = self.request.query_params.get('outbound')
+        if outbound is not None:
+            self.queryset = [query for query in self.queryset if str(query.outbound) == outbound]
+        return_date = self.request.query_params.get('return_date')
+        if return_date is not None:
+            self.queryset = [query for query in self.queryset if str(query.return_date) == return_date]
         return self.queryset
         
