@@ -148,3 +148,22 @@ class Ticket(models.Model):
             return_schedule = Schedule.objects.get(id=return_tickets[0].schedule.id)
             return return_schedule.date
         return None
+    
+
+class Survey(models.Model):
+    departure = models.ForeignKey(verbose_name='Откуда', to=Airport, on_delete=models.PROTECT, related_name='departure', null=True)
+    arrival = models.ForeignKey(verbose_name='Куда', to=Airport, on_delete=models.PROTECT, related_name='arrival', null=True)
+    age = models.PositiveIntegerField(verbose_name='Возраст', null=True)
+    gender = models.CharField(verbose_name='Пол', max_length=2, default='NS', blank=True, null=True)
+    travel_class = models.ForeignKey(verbose_name='Класс билета', to=CabinType, on_delete=models.PROTECT, null=True)
+    q1 = models.IntegerField(verbose_name='Оценка самолета', default=0, null=True)
+    q2 = models.IntegerField(verbose_name='Оценка проводников', default=0, null=True)
+    q3 = models.IntegerField(verbose_name='Оценка развлечений', default=0, null=True)
+    q4 = models.IntegerField(verbose_name='Оценка стоимости', default=0, null=True)
+
+    class Meta:
+        verbose_name = 'Опрос'
+        verbose_name_plural = 'Опросы'
+
+    def __str__(self):
+        return f'{self.departure} -> {self.arrival}'
