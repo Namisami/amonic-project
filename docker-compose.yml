@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  amonic-api:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    container_name: 'amonic-api'
+    networks:
+      - custom_net
+    volumes:
+      - ./db.sqlite3:/db.sqlite3
+      - ./static:/static
+      - ./media:/media
+    restart: always
+    ports:
+      - 8000:8000
+networks:
+  custom_net:
+    driver: bridge
