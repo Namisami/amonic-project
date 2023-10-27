@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 
-from .serializers import CountrySerializer, OfficeSerializer, AircraftSerializer, AirportSerializer, RouteSerializer, ScheduleSerializer, CabinTypeSerializer, TicketSerializer, SurveySerializer
-from .models import Country, Office, Aircraft, Airport, Route, Schedule, CabinType, Ticket, Survey
+from .serializers import CountrySerializer, OfficeSerializer, AircraftSerializer, AirportSerializer, RouteSerializer, ScheduleSerializer, CabinTypeSerializer, TicketSerializer, SurveySerializer, AmentitySerializer, AmentityTicketSerializer
+from .models import Country, Office, Aircraft, Airport, Route, Schedule, CabinType, Ticket, Survey, Amentity, AmentityTicket
 
 
 class CountryViewSet(viewsets.ModelViewSet):
@@ -81,4 +81,14 @@ class TicketViewSet(viewsets.ModelViewSet):
 class SurveyViewSet(viewsets.ModelViewSet):
     queryset = Survey.objects.all()
     serializer_class = SurveySerializer
+        
+
+class AmentityViewSet(viewsets.ModelViewSet):
+    queryset = Amentity.objects.all()
+    serializer_class = AmentitySerializer
+        
+
+class AmentityTicketViewSet(viewsets.ModelViewSet):
+    queryset = AmentityTicket.objects.all()
+    serializer_class = AmentityTicketSerializer
                 

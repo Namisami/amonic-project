@@ -167,3 +167,28 @@ class Survey(models.Model):
 
     def __str__(self):
         return f'{self.departure} -> {self.arrival}'
+    
+
+class Amentity(models.Model):
+    service = models.CharField(verbose_name='Название', max_length=255)
+    price = models.PositiveIntegerField(verbose_name='Цена')
+
+    class Meta:
+        verbose_name = 'Доп. услуга'
+        verbose_name_plural = 'Доп. услуги'
+
+    def __str__(self):
+        return self.service
+    
+
+class AmentityTicket(models.Model):
+    amentity = models.ForeignKey(verbose_name='Доп. услуга', to=Amentity, on_delete=models.PROTECT)
+    ticket = models.ForeignKey(verbose_name='Билет', to=Ticket, on_delete=models.CASCADE)
+    price = models.PositiveIntegerField(verbose_name='Цена')
+
+    class Meta:
+        verbose_name = 'Билет с услугой'
+        verbose_name_plural = 'Билеты с услугами'
+
+    def __str__(self):
+        return str(self.ticket)

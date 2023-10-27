@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Country, Office, Aircraft, Airport, Schedule, Route, CabinType, Ticket, Survey
+from .models import Country, Office, Aircraft, Airport, Schedule, Route, CabinType, Ticket, Survey, Amentity, AmentityTicket
 
 
 class CountrySerializer(serializers.HyperlinkedModelSerializer):
@@ -56,3 +56,14 @@ class SurveySerializer(serializers.HyperlinkedModelSerializer):
         model = Survey
         fields = ['url', 'id', 'departure', 'arrival', 'age', 'gender', 'travel_class', 'q1', 'q2', 'q3', 'q4']
 
+
+class AmentitySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Amentity
+        fields = ['url', 'id', 'service', 'price']
+
+
+class AmentityTicketSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = AmentityTicket
+        fields = ['url', 'id', 'amentity', 'ticket', 'price']

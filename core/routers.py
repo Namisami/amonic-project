@@ -1,6 +1,6 @@
 from rest_framework import routers
 from users.views import RoleViewSet, UserViewSet
-from airports.views import CountryViewSet, OfficeViewSet, AirportViewSet, AircraftViewSet, RouteViewSet, ScheduleViewSet, CabinTypeViewSet, TicketViewSet, SurveyViewSet
+from airports.views import CountryViewSet, OfficeViewSet, AirportViewSet, AircraftViewSet, RouteViewSet, ScheduleViewSet, CabinTypeViewSet, TicketViewSet, SurveyViewSet, AmentityViewSet, AmentityTicketViewSet
 
 router = routers.DefaultRouter()
 
@@ -15,3 +15,5 @@ router.register('schedules', ScheduleViewSet)
 router.register('cabin_types', CabinTypeViewSet)
 router.register('tickets', TicketViewSet)
 router.register('surveys', SurveyViewSet)
+router.register('amentities', AmentityViewSet)
+router.register('amentity-tickets', AmentityTicketViewSet)
