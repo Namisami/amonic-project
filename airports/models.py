@@ -1,6 +1,8 @@
 from django.core.validators import RegexValidator
 from django.db import models
 
+from users.models import User
+
 
 class Country(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name='Название')
@@ -73,8 +75,8 @@ class Aircraft(models.Model):
 class Schedule(models.Model):
     date = models.DateField(verbose_name='Дата')
     time = models.TimeField(verbose_name='Время')
-    aircraft = models.ForeignKey(to=Aircraft, on_delete=models.PROTECT)
-    route = models.ForeignKey(to=Route, on_delete=models.PROTECT)
+    aircraft = models.ForeignKey(verbose_name='Самолет', to=Aircraft, on_delete=models.PROTECT)
+    route = models.ForeignKey(verbose_name='Рейс', to=Route, on_delete=models.PROTECT)
     flight_number = models.CharField(verbose_name='Номер рейса', max_length=255)
     economy_price = models.PositiveIntegerField(verbose_name='Стоимость эконома')
     confirmed = models.BooleanField(verbose_name='Наличие подтверждения')
@@ -84,4 +86,67 @@ class Schedule(models.Model):
         verbose_name_plural = 'Расписания'
 
     def __str__(self):
-        return self.flight_number + ' ' + str(self.flight_number)
+        return self.flight_number + ' ' + str(self.route)
+    
+
+class CabinType(models.Model):
+    name = models.CharField(verbose_name='Название', max_length=255)
+
+    class Meta:
+        verbose_name = 'Тип кабины'
+        verbose_name_plural = 'Типы кабин'
+
+    def __str__(self):
+        return self.name
+
+
+class Ticket(models.Model):
+    user = models.ForeignKey(verbose_name='Пользователь', to=User, on_delete=models.PROTECT)
+    schedule = models.ForeignKey(verbose_name='Рейс', to=Schedule, on_delete=models.PROTECT)
+    cabin_type = models.ForeignKey(verbose_name='Тип кабины', to=CabinType, on_delete=models.PROTECT)
+    first_name = models.CharField(verbose_name='Имя', max_length=255)
+    last_name = models.CharField(verbose_name='Фамилия', max_length=255)
+    email = models.EmailField(verbose_name='Email')
+    phone = models.CharField(verbose_name='Номер телефона', max_length=255)
+    passport_number = models.CharField(verbose_name='Номер паспорта', max_length=255)
+    passport_country = models.ForeignKey(verbose_name='Гражданство', to=Country, on_delete=models.PROTECT)
+    booking_reference = models.CharField(verbose_name='Номер брони', max_length=255)
+    confirmed = models.BooleanField(verbose_name='Наличие подтверждения')
+
+    class Meta:
+        verbose_name = 'Билет'
+        verbose_name_plural = 'Билеты'
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name} - {self.booking_reference}'
+    
+    @property
+    def departure_airport(self):
+        route_id = Schedule.objects.get(id=self.schedule.id).route.id
+        route = Route.objects.get(id=route_id)
+        return route.departure_airport.iata_code
+    
+    @property
+    def arrival_airport(self):
+        route_id = Schedule.objects.get(id=self.schedule.id).route.id
+        route = Route.objects.get(id=route_id)
+        return route.arrival_airport.iata_code
+    
+    @property
+    def outbound(self):
+        date = Schedule.objects.get(id=self.schedule.id).date
+        return date
+    
+    @property
+    def return_date(self):
+        user_tickets = Ticket.objects.filter(user=self.user)
+        route_id = Route.objects.get(arrival_airport=Airport.objects.get(iata_code=self.departure_airport)).id
+        schedule = Schedule.objects.get(id=self.schedule.id)
+        return_tickets = user_tickets.filter(schedule=Schedule.objects.get(route=route_id, date__gte=schedule.date, time__gt=schedule.time))
+        return_schedule = Schedule.objects.get(id=return_tickets[0].schedule.id)
+        return return_schedule.date
+        # return_ticket = user_tickets.filter(arrival_airport=self.departure_airport)
+        # date = Schedule.objects.get(id=return_ticket.schedule.id).date
+        # if date is None:
+        #     return None
+        # return date

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Country, Office, Aircraft, Airport, Schedule, Route
+from .models import Country, Office, Aircraft, Airport, Schedule, Route, CabinType, Ticket
 
 
 class CountrySerializer(serializers.HyperlinkedModelSerializer):
@@ -37,3 +37,16 @@ class ScheduleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Schedule
         fields = ['url', 'id', 'date', 'time', 'aircraft', 'route', 'flight_number', 'economy_price', 'confirmed']
+        
+
+class CabinTypeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = CabinType
+        fields = ['url', 'id', 'name']
+        
+
+class TicketSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Ticket
+        fields = ['url', 'id', 'user', 'schedule', 'cabin_type', 'first_name', 'last_name', 'email', 'phone', 'passport_number', 'passport_country', 'booking_reference', 'confirmed', 'departure_airport', 'arrival_airport', 'outbound', 'return_date']
+
