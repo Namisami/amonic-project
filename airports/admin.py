@@ -1,9 +1,7 @@
 from django.contrib import admin
 
-from .models import Country, Office, Aircraft, Airport, Route, Schedule, CabinType, Ticket, Survey, Amentity, AmentityTicket
+from .models import Aircraft, Airport, Route, Schedule, CabinType, Ticket, Survey, Amentity, AmentityTicket
 
-admin.site.register(Country)
-admin.site.register(Office)
 admin.site.register(Airport)
 admin.site.register(Aircraft)
 admin.site.register(Route)

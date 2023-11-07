@@ -1,6 +1,6 @@
 from rest_framework import routers
-from users.views import RoleViewSet, UserViewSet
-from airports.views import CountryViewSet, OfficeViewSet, AirportViewSet, AircraftViewSet, RouteViewSet, ScheduleViewSet, CabinTypeViewSet, TicketViewSet, SurveyViewSet, AmentityViewSet, AmentityTicketViewSet
+from users.views import RoleViewSet, UserViewSet, OfficeViewSet, CountryViewSet
+from airports.views import AirportViewSet, AircraftViewSet, RouteViewSet, ScheduleViewSet, CabinTypeViewSet, TicketViewSet, SurveyViewSet, AmentityViewSet, AmentityTicketViewSet
 
 router = routers.DefaultRouter()
 

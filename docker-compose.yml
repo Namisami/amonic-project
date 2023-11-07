@@ -9,9 +9,9 @@ services:
     networks:
       - custom_net
     volumes:
-      - ./db.sqlite3:/db.sqlite3
-      - ./static:/static
-      - ./media:/media
+      - ./db.sqlite3:/amonic-project/db.sqlite3
+      - ./static:/amonic-project/static
+      - ./media:/amonic-project/media
     restart: always
     ports:
       - 8000:8000

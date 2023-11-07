@@ -1,18 +1,6 @@
 from rest_framework import serializers
 
-from .models import Country, Office, Aircraft, Airport, Schedule, Route, CabinType, Ticket, Survey, Amentity, AmentityTicket
-
-
-class CountrySerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Country
-        fields = ['url', 'id', 'name']
-
-
-class OfficeSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Office
-        fields = ['url', 'id', 'country', 'title', 'phone', 'contact']
+from .models import Aircraft, Airport, Schedule, Route, CabinType, Ticket, Survey, Amentity, AmentityTicket
 
 
 class AirportSerializer(serializers.HyperlinkedModelSerializer):

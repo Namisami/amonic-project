@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.dispatch import receiver
 from django.utils import timezone
+from django.core.validators import RegexValidator
 
 from .managers import CustomUserManager
 
@@ -10,14 +11,35 @@ from .managers import CustomUserManager
 class Role(models.Model):
     title = models.CharField(verbose_name='Роль', max_length=255)
     
-    @classmethod
-    def get_default_pk(cls):
-        role, created = cls.objects.get_or_create(title='Пользователь')
-        return role.pk
-    
     class Meta:
         verbose_name = 'Роль'
         verbose_name_plural = 'Роли'
+
+    def __str__(self):
+        return self.title
+    
+
+class Country(models.Model):
+    name = models.CharField(max_length=255, unique=True, verbose_name='Название')
+
+    class Meta:
+        verbose_name = 'Страна'
+        verbose_name_plural = 'Страны'
+
+    def __str__(self):
+        return self.name
+
+
+class Office(models.Model):
+    country = models.ForeignKey(verbose_name='Страна', to=Country, on_delete=models.PROTECT)
+    title = models.CharField(max_length=255, verbose_name='Название')
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+7**********'. Up to 15 digits allowed.")
+    phone = models.CharField(validators=[phone_regex], max_length=17, verbose_name='Телефонный номер', blank=True)
+    contact = models.CharField(max_length=255, verbose_name='Контакты', blank=True)
+
+    class Meta:
+        verbose_name = 'Офис'
+        verbose_name_plural = 'Офисы'
 
     def __str__(self):
         return self.title
@@ -25,13 +47,13 @@ class Role(models.Model):
 
 class User(AbstractUser):
     username = None
-    # office_id
-    role_id = models.ForeignKey(verbose_name='Роль', to=Role, on_delete=models.PROTECT, default=Role.get_default_pk)
+    office = models.ForeignKey(verbose_name='Офис', to=Office, on_delete=models.PROTECT, null=True)
+    role = models.ForeignKey(verbose_name='Роль', to=Role, on_delete=models.PROTECT, null=True)
     email = models.EmailField(verbose_name='Email', unique=True)
     first_name = models.CharField(verbose_name='Имя', blank=True, max_length=255)
     last_name = models.CharField(verbose_name='Фамилия', blank=True, max_length=255)
     date_of_birth = models.DateField(verbose_name='Дата рождения', null=True)
-    last_logout = models.DateTimeField(verbose_name='Время выхода')
+    last_logout = models.DateTimeField(verbose_name='Время выхода', null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

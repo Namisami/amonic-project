@@ -1,17 +1,7 @@
 from rest_framework import viewsets
 
-from .serializers import CountrySerializer, OfficeSerializer, AircraftSerializer, AirportSerializer, RouteSerializer, ScheduleSerializer, CabinTypeSerializer, TicketSerializer, SurveySerializer, AmentitySerializer, AmentityTicketSerializer
-from .models import Country, Office, Aircraft, Airport, Route, Schedule, CabinType, Ticket, Survey, Amentity, AmentityTicket
-
-
-class CountryViewSet(viewsets.ModelViewSet):
-    queryset = Country.objects.all()
-    serializer_class = CountrySerializer
-
-
-class OfficeViewSet(viewsets.ModelViewSet):
-    queryset = Office.objects.all()
-    serializer_class = OfficeSerializer
+from .serializers import AircraftSerializer, AirportSerializer, RouteSerializer, ScheduleSerializer, CabinTypeSerializer, TicketSerializer, SurveySerializer, AmentitySerializer, AmentityTicketSerializer
+from .models import Aircraft, Airport, Route, Schedule, CabinType, Ticket, Survey, Amentity, AmentityTicket
 
 
 class AircraftViewSet(viewsets.ModelViewSet):
