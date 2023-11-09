@@ -5,6 +5,10 @@ services:
     build:
       context: ./
       dockerfile: ./Dockerfile
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
     container_name: 'amonic-api'
     networks:
       - custom_net
@@ -12,7 +16,6 @@ services:
       - ./db.sqlite3:/amonic-project/db.sqlite3
       - ./static:/amonic-project/static
       - ./media:/amonic-project/media
-    restart: always
     ports:
       - 8000:8000
 networks:

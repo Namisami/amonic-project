@@ -7,6 +7,7 @@ RUN pip install -r requirements.txt
 COPY . /amonic-project/
 EXPOSE 8000
 RUN touch db.sqlite3
-RUN python manage.py makemigrations
-RUN python manage.py migrate
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# RUN python manage.py makemigrations
+# RUN python manage.py migrate
+# RUN python manage.py runscript import_csv
+# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

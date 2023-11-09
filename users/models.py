@@ -31,7 +31,7 @@ class Country(models.Model):
 
 
 class Office(models.Model):
-    country = models.ForeignKey(verbose_name='Страна', to=Country, on_delete=models.PROTECT)
+    country = models.ForeignKey(verbose_name='Страна', to=Country, on_delete=models.PROTECT, null=True)
     title = models.CharField(max_length=255, verbose_name='Название')
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+7**********'. Up to 15 digits allowed.")
     phone = models.CharField(validators=[phone_regex], max_length=17, verbose_name='Телефонный номер', blank=True)

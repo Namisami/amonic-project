@@ -24,7 +24,7 @@ class RouteSerializer(serializers.HyperlinkedModelSerializer):
 class ScheduleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Schedule
-        fields = ['url', 'id', 'date', 'time', 'aircraft', 'route', 'flight_number', 'economy_price', 'confirmed']
+        fields = ['url', 'id', 'date', 'time', 'aircraft', 'route', 'flight_number', 'economy_price', 'business_price', 'first_class_price', 'confirmed']
         
 
 class CabinTypeSerializer(serializers.HyperlinkedModelSerializer):

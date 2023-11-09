@@ -1,12 +1,13 @@
 from django.db import models
+import math
 
 from users.models import User, Country
     
 
 class Airport(models.Model):
-    country = models.ForeignKey(verbose_name='Страна', to=Country, on_delete=models.PROTECT)
+    country = models.ForeignKey(verbose_name='Страна', to=Country, on_delete=models.PROTECT, null=True)
     iata_code = models.CharField(verbose_name='Код аэропорта', max_length=3)
-    name = models.CharField(verbose_name='Название', max_length=255)
+    name = models.CharField(verbose_name='Название', max_length=255, blank=True)
 
     class Meta:
         verbose_name = 'Аэропорт'
@@ -32,10 +33,10 @@ class Route(models.Model):
 
 class Aircraft(models.Model):
     name = models.CharField(verbose_name='Название', max_length=255)
-    make_model = models.CharField(verbose_name='Марка', max_length=255)
-    total_seats = models.PositiveIntegerField(verbose_name='Количество сидений')
-    economy_seats = models.PositiveIntegerField(verbose_name='Мест в экономе')
-    business_seats = models.PositiveIntegerField(verbose_name='Мест в бизнес-классе')
+    make_model = models.CharField(verbose_name='Марка', max_length=255, blank=True)
+    total_seats = models.PositiveIntegerField(verbose_name='Количество сидений', null=True)
+    economy_seats = models.PositiveIntegerField(verbose_name='Мест в экономе', null=True)
+    business_seats = models.PositiveIntegerField(verbose_name='Мест в бизнес-классе', null=True)
 
     class Meta:
         verbose_name = 'Самолет'
@@ -52,7 +53,7 @@ class Schedule(models.Model):
     route = models.ForeignKey(verbose_name='Рейс', to=Route, on_delete=models.PROTECT)
     flight_number = models.CharField(verbose_name='Номер рейса', max_length=255)
     economy_price = models.PositiveIntegerField(verbose_name='Стоимость эконома')
-    confirmed = models.BooleanField(verbose_name='Наличие подтверждения')
+    confirmed = models.BooleanField(verbose_name='Наличие подтверждения', default=True)
 
     class Meta:
         verbose_name = 'Рейс'
@@ -60,6 +61,16 @@ class Schedule(models.Model):
 
     def __str__(self):
         return self.flight_number + ' ' + str(self.route)
+
+    @property
+    def business_price(self):
+        price = math.ceil(self.economy_price * 1.35)
+        return price
+    
+    @property
+    def first_class_price(self):
+        price = math.ceil(self.economy_price * 1.35 * 1.3)
+        return price
     
 
 class CabinType(models.Model):
