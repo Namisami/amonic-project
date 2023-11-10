@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.decorators import action
 
-from .serializers import UserSerializer, RoleSerializer, OfficeSerializer, CountrySerializer
-from .models import User, Role, Office, Country
+from .serializers import UserSerializer, RoleSerializer, OfficeSerializer, CountrySerializer, ErrorSerializer
+from .models import User, Role, Office, Country, Error
 
 
 class RoleViewSet(viewsets.ModelViewSet):
@@ -23,3 +23,8 @@ class OfficeViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class ErrorViewSet(viewsets.ModelViewSet):
+    queryset = Error.objects.all()
+    serializer_class = ErrorSerializer

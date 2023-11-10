@@ -62,10 +62,16 @@ class User(AbstractUser):
 
     @property
     def online_time(self):
+        if self.last_login is None or self.last_logout is None:
+            return None
         if self.last_login < self.last_logout:
             return 0
         else:
             return timezone.now() - self.last_login
+        
+    @property
+    def crushes_count(self):
+        return Error.objects.filter(user=self).count()
     
     class Meta:
         verbose_name = 'Пользователь'
@@ -73,6 +79,24 @@ class User(AbstractUser):
     
     def __str__(self):
         return self.email
+    
+
+class Error(models.Model):
+    REASON_CHOICES = [
+        ("SOFT", "Software Crush"),
+        ("SYST", "System Crush")
+    ]
+    user = models.ForeignKey(verbose_name='Пользователь', to=User, on_delete=models.CASCADE)
+    description = models.TextField(verbose_name='Описание проблемы')
+    reason = models.CharField(verbose_name='Причина', choices=REASON_CHOICES, max_length=255)
+
+    class Meta:
+        verbose_name = 'Ошибка'
+        verbose_name_plural = 'Ошибки'
+
+    def __str__(self):
+        return self.user.email
+
 
 @receiver(user_logged_out)
 def sig_user_logged_out(sender, user, request, **kwargs):

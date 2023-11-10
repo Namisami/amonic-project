@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import User, Role, Office, Country
+from .models import User, Role, Office, Country, Error
 
 
 class RoleSerializer(serializers.HyperlinkedModelSerializer):
@@ -25,4 +25,11 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     online_time = serializers.ReadOnlyField()
     class Meta:
         model = User
-        fields = ['url', 'id', 'office', 'role', 'email', 'password', 'first_name', 'last_name', 'date_of_birth', 'is_active', 'online_time', 'last_logout']
+        fields = ['url', 'id', 'office', 'role', 'email', 'first_name', 'last_name', 'date_of_birth', 'is_active', 'online_time', 'last_login', 'last_logout', 'crushes_count']
+
+
+class ErrorSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Error
+        fields = ['url', 'id', 'user', 'description', 'reason']
+        depth = 1
