@@ -81,6 +81,7 @@ class User(AbstractUser):
         return self.email
     
 
+
 class Error(models.Model):
     REASON_CHOICES = [
         ("SOFT", "Software Crush"),
@@ -95,10 +96,25 @@ class Error(models.Model):
         verbose_name_plural = 'Ошибки'
 
     def __str__(self):
-        return self.user.email
+        return self.description
 
+
+class Visit(models.Model):
+    user = models.ForeignKey(verbose_name='Пользователь', to=User, on_delete=models.CASCADE)
+    error = models.ForeignKey(verbose_name='Ошибка', to=Error, on_delete=models.CASCADE, null=True)
+
+    class Meta:
+        verbose_name = 'Посещение'
+        verbose_name_plural = 'Посещения'
+
+    def __str__(self):
+        return self.user.email
+    
 
 @receiver(user_logged_out)
 def sig_user_logged_out(sender, user, request, **kwargs):
+    Visit.objects.create(
+        user=user,
+    )
     user.last_logout = timezone.now()
     user.save()
