@@ -28,6 +28,13 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'id', 'office', 'role', 'email', 'first_name', 'last_name', 'date_of_birth', 'is_active', 'online_time', 'last_login', 'last_logout', 'crushes_count']
         depth = 1
 
+
+class UserPostSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ['office', 'role', 'email', 'first_name', 'last_name', 'date_of_birth']
+
+
 class ErrorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Error
