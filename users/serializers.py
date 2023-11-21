@@ -42,9 +42,23 @@ class ErrorSerializer(serializers.HyperlinkedModelSerializer):
         depth = 1
 
 
+class ErrorPostSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Error
+        fields = ['url', 'id', 'user', 'description', 'reason']
+
+
 class VisitSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Visit
-        fields = ['url', 'id', 'user', 'error']
+        fields = ['url', 'id', 'user', 'error', 'login_time', 'logout_time']
         depth = 1
+
+
+class VisitPostSerializer(serializers.HyperlinkedModelSerializer):
+    user = serializers.ReadOnlyField(required=False)
+    login_time = serializers.ReadOnlyField(required=False)
+    class Meta:
+        model = Visit
+        fields = ['url', 'id', 'user', 'error', 'login_time', 'logout_time']
         

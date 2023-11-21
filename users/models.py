@@ -102,6 +102,8 @@ class Error(models.Model):
 class Visit(models.Model):
     user = models.ForeignKey(verbose_name='Пользователь', to=User, on_delete=models.CASCADE)
     error = models.ForeignKey(verbose_name='Ошибка', to=Error, on_delete=models.CASCADE, null=True)
+    login_time = models.DateTimeField(verbose_name='Время входа')
+    logout_time = models.DateTimeField(verbose_name='Время входа', auto_now_add=True)
 
     class Meta:
         verbose_name = 'Посещение'
@@ -113,8 +115,12 @@ class Visit(models.Model):
 
 @receiver(user_logged_out)
 def sig_user_logged_out(sender, user, request, **kwargs):
-    Visit.objects.create(
-        user=user,
-    )
-    user.last_logout = timezone.now()
-    user.save()
+    try:
+        Visit.objects.create(
+            user=user,
+            login_time=user.last_login
+        )
+        user.last_logout = timezone.now()
+        user.save()
+    except Exception as e:
+        print(e)
