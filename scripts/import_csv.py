@@ -3,7 +3,8 @@ import csv
 from datetime import datetime
 
 from core.settings import BASE_DIR
-from users.models import User, Role, Office
+from users.forms import UserCreationForm
+from users.models import Role, Office
 from airports.models import Schedule, Route, Airport, Aircraft, Survey, CabinType
 
 CSV_ROOT = BASE_DIR / 'csv_data'
@@ -19,16 +20,23 @@ def run():
                 title=row[5]
             )
             dt = datetime.strptime(row[6], '%m/%d/%Y').strftime('%Y-%m-%d')
-            user, _ = User.objects.get_or_create(
-                    role=role,
-                    email=row[1],
-                    password=row[2],
-                    first_name=row[3],
-                    last_name=row[4],
-                    office=office,
-                    date_of_birth=dt,
-                    is_active=bool(int(row[7]))
-                )
+            user_dict = {
+                'role': role,
+                'email': row[1],
+                'password1': row[2],
+                'password2': row[2],
+                'first_name': row[3],
+                'last_name': row[4],
+                'office': office,
+                'date_of_birth': dt,
+                'is_active': bool(int(row[7]))
+            }
+            form = UserCreationForm(user_dict)
+            try:
+                if form.is_valid():
+                    form.save()
+            except Exception as e:
+                print('ERROR', e)
 
     schedule_files = ['Schedules_V12.csv', 'Schedules_V12_2.csv']
     for file in schedule_files:
@@ -89,7 +97,8 @@ def run():
                         schedule.confirmed = True if row[7] == 'OK' else False
                         schedule.save()
                         
-    survey_files = ['survey_05.csv', 'survey_06.csv', 'survey_07.csv']
+    survey_files = ['survey_05.csv']
+    # survey_files = ['survey_05.csv', 'survey_06.csv', 'survey_07.csv']
     for file in survey_files:
         with open(os.path.join(CSV_ROOT, file)) as f:
             reader = csv.reader(f)
