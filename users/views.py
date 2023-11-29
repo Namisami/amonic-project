@@ -39,6 +39,12 @@ class CountryViewSet(viewsets.ModelViewSet):
     serializer_class = CountrySerializer
     authentication_classes = [JWTAuthentication]
 
+    def get_queryset(self):
+        name = self.request.query_params.get('name')
+        if name is not None:
+            self.queryset = [query for query in self.queryset if str(query.name).lower() == name.lower()]
+        return self.queryset
+
 
 class OfficeViewSet(viewsets.ModelViewSet):
     queryset = Office.objects.all()
@@ -56,6 +62,18 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     authentication_classes = [JWTAuthentication]
+
+    def get_queryset(self):
+        self.queryset = User.objects.all()
+        office = self.request.query_params.get('office')
+        if office is not None:
+            res = []
+            for query in self.queryset:
+                if query.office:
+                    if str(query.office.title).lower() == office.lower():
+                        res.append(query)
+            self.queryset = res
+        return self.queryset
 
     def create(self, request, *args, **kwargs):
         serializer = UserPostSerializer(data=request.data, context={'request': request})

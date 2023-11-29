@@ -135,3 +135,4 @@ def run():
                     q3=row[7] if row[7] != '' else None,
                     q4=row[8] if row[8] != '' else None,
                 )
+                

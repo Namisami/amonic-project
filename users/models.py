@@ -48,7 +48,7 @@ class Office(models.Model):
 class User(AbstractUser):
     username = None
     office = models.ForeignKey(verbose_name='Офис', to=Office, on_delete=models.PROTECT, null=True)
-    role = models.ForeignKey(verbose_name='Роль', to=Role, on_delete=models.PROTECT, null=True)
+    role = models.ForeignKey(verbose_name='Роль', to=Role, on_delete=models.PROTECT, null=True, default=Role.objects.get(title='User').id)
     email = models.EmailField(verbose_name='Email', unique=True)
     first_name = models.CharField(verbose_name='Имя', blank=True, max_length=255)
     last_name = models.CharField(verbose_name='Фамилия', blank=True, max_length=255)

@@ -25,6 +25,7 @@ class ScheduleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Schedule
         fields = ['url', 'id', 'date', 'time', 'aircraft', 'route', 'flight_number', 'economy_price', 'business_price', 'first_class_price', 'confirmed']
+        depth = 2
         
 
 class CabinTypeSerializer(serializers.HyperlinkedModelSerializer):
@@ -34,15 +35,24 @@ class CabinTypeSerializer(serializers.HyperlinkedModelSerializer):
         
 
 class TicketSerializer(serializers.HyperlinkedModelSerializer):
+    def __init__(self, *args, **kwargs):
+        super(TicketSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get('request')
+        if request and (request.method == 'POST' or request.method == 'PUT' or request.method == 'PATCH'):
+            self.Meta.depth = 0
+        else:
+            self.Meta.depth = 3
     class Meta:
         model = Ticket
         fields = ['url', 'id', 'user', 'schedule', 'cabin_type', 'first_name', 'last_name', 'email', 'phone', 'passport_number', 'passport_country', 'booking_reference', 'confirmed', 'departure_airport', 'arrival_airport', 'outbound', 'return_date']
+        depth = 3
 
 
 class SurveySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Survey
         fields = ['url', 'id', 'departure', 'arrival', 'age', 'gender', 'travel_class', 'q1', 'q2', 'q3', 'q4']
+        # fields = '__all__'
 
 
 class AmentitySerializer(serializers.HyperlinkedModelSerializer):

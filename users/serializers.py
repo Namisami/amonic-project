@@ -22,6 +22,13 @@ class OfficeSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
+    def __init__(self, *args, **kwargs):
+        super(UserSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get('request')
+        if request and (request.method == 'POST' or request.method == 'PUT' or request.method == 'PATCH'):
+            self.Meta.depth = 0
+        else:
+            self.Meta.depth = 1
     online_time = serializers.ReadOnlyField()
     class Meta:
         model = User
@@ -49,10 +56,17 @@ class ErrorPostSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class VisitSerializer(serializers.HyperlinkedModelSerializer):
+    def __init__(self, *args, **kwargs):
+        super(VisitSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get('request')
+        if request and (request.method == 'POST' or request.method == 'PUT' or request.method == 'PATCH'):
+            self.Meta.depth = 0
+        else:
+            self.Meta.depth = 2
     class Meta:
         model = Visit
         fields = ['url', 'id', 'user', 'error', 'login_time', 'logout_time']
-        depth = 1
+        depth = 2
 
 
 class VisitPostSerializer(serializers.HyperlinkedModelSerializer):

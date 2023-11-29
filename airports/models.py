@@ -124,12 +124,12 @@ class Ticket(models.Model):
     @property
     def return_date(self):
         user_tickets = Ticket.objects.filter(user=self.user)
-        route_id = Route.objects.get(arrival_airport=Airport.objects.get(iata_code=self.departure_airport)).id
+        route_id = Route.objects.get(arrival_airport=Airport.objects.get(iata_code=self.departure_airport), departure_airport=Airport.objects.get(iata_code=self.arrival_airport)).id
         schedule = Schedule.objects.get(id=self.schedule.id)
         return_schedules = Schedule.objects.filter(route=route_id, date__gte=schedule.date, time__gt=schedule.time)
         if return_schedules.count() > 0:
             return_tickets = user_tickets.filter(schedule=return_schedules[0])
-            return_schedule = Schedule.objects.get(id=return_tickets[0].schedule.id)
+            return_schedule = Schedule.objects.get(id=return_tickets.first().schedule.id)
             return return_schedule.date
         return None
     
@@ -151,6 +151,62 @@ class Survey(models.Model):
 
     def __str__(self):
         return f'{self.departure} -> {self.arrival}'
+    
+    @property
+    def male_count(self):
+        return Survey.objects.filter(gender='M').count()
+    
+    @property
+    def female_count(self):
+        return Survey.objects.filter(gender='F').count()
+    
+    @property
+    def age_18_24(self):
+        return Survey.objects.filter(age__range=(18, 24)).count()
+    
+    @property
+    def age_25_39(self):
+        return Survey.objects.filter(age__range=(25, 39)).count()
+    
+    @property
+    def age_40_59(self):
+        return Survey.objects.filter(age__range=(40, 59)).count()
+    
+    @property
+    def age_60(self):
+        return Survey.objects.filter(age__gte=60).count()
+    
+    @property
+    def economy(self):
+        return Survey.objects.filter(travel_class=CabinType.objects.get(name='Economy').id).count()
+    
+    @property
+    def business(self):
+        return Survey.objects.filter(travel_class=CabinType.objects.get(name='Business').id).count()
+    
+    @property
+    def first(self):
+        return Survey.objects.filter(travel_class=CabinType.objects.get(name='First').id).count()
+    
+    @property
+    def auh(self):
+        return Survey.objects.filter(arrival=Airport.objects.get(iata_code='AUH').id).count()
+    
+    @property
+    def bah(self):
+        return Survey.objects.filter(arrival=Airport.objects.get(iata_code='BAH').id).count()
+    
+    @property
+    def doh(self):
+        return Survey.objects.filter(arrival=Airport.objects.get(iata_code='DOH').id).count()
+    
+    @property
+    def ryu(self):
+        return Survey.objects.filter(arrival=Airport.objects.get(iata_code='RYU').id).count()
+    
+    @property
+    def cai(self):
+        return Survey.objects.filter(arrival=Airport.objects.get(iata_code='CAI').id).count()
     
 
 class Amentity(models.Model):
